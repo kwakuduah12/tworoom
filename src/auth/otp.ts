@@ -3,6 +3,10 @@ import { doc, setDoc, getDoc, updateDoc } from "firebase/firestore";
 import { db } from "../../src/firebase";
 import * as Crypto from "expo-crypto";
 
+function normalizeEmail(email: string) {
+  return email.toLowerCase().trim();
+}
+
 export function generateCode() {
   return Math.floor(100000 + Math.random() * 900000).toString();
 }
@@ -15,10 +19,11 @@ export async function hashCode(code: string) {
 }
 
 export async function createOtp(email: string) {
+  const safeEmail = normalizeEmail(email);
   const code = generateCode();
   const codeHash = await hashCode(code);
 
-  await setDoc(doc(db, "otp_requests", email), {
+  await setDoc(doc(db, "otp_requests", safeEmail), {
     codeHash,
     expiresAt: addMinutes(new Date(), 10),
     attempts: 0,
@@ -29,8 +34,8 @@ export async function createOtp(email: string) {
 
 export async function verifyOtp(email: string, inputCode: string) {
   const ref = doc(db, "otp_requests", email);
+  
   const snap = await getDoc(ref);
-
   if (!snap.exists()) return false;
 
   const data = snap.data();
