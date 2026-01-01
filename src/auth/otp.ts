@@ -2,6 +2,7 @@ import { addMinutes } from "date-fns";
 import { doc, setDoc, getDoc, updateDoc } from "firebase/firestore";
 import { db } from "../../src/firebase";
 import * as Crypto from "expo-crypto";
+import {deleteDoc} from "firebase/firestore";
 
 function normalizeEmail(email: string) {
   return email.toLowerCase().trim();
@@ -48,6 +49,8 @@ export async function verifyOtp(email: string, inputCode: string) {
     await updateDoc(ref, { attempts: data.attempts + 1 });
     return false;
   }
+
+  await deleteDoc(ref);
 
   return true;
 }
