@@ -7,10 +7,16 @@ import { useState } from "react";
 export default function EnterCode() {
   const { email } = useLocalSearchParams<{ email: string }>();
   const [code, setCode] = useState("");
+  const [loading, setLoading] = useState(false);
 
   async function submit() {
+    if (loading) return;
+    setLoading(true);
     const ok = await verifyOtp(email!, code);
-    if (!ok) return;
+    if (!ok) {
+      setLoading(false);
+      return;
+    }
 
     await createSession(email!);
     router.replace("/(pairing)/create-couple");
