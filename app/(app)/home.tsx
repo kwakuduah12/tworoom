@@ -1,10 +1,44 @@
+import { useEffect, useState } from "react";
 import { View, Text, Button } from "react-native";
 import { router } from "expo-router";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "../../src/firebase";
+import { getItem } from "../../src/storage";
+
+function daysUntil(dateYMD: string) {
+  const [y, m, d] = dateYMD.split("-").map(Number);
+  const target = new Date(y, m - 1, d);
+  const today = new Date();
+  const start = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+  const diffMs = target.getTime() - start.getTime();
+  return Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+}
 
 export default function Home() {
+  const [nextVisitDate, setNextVisitDate] = useState<string>("");
+
+  useEffect(() => {
+    (async () => {
+      const coupleId = await getItem("coupleId");
+      if (!coupleId) return;
+
+      const snap = await getDoc(doc(db, "couples", coupleId));
+      const date = (snap.data() as any)?.nextVisitDate as string | undefined;
+
+      if (date) setNextVisitDate(date);
+    })();
+  }, []);
+
+  const countdownText = nextVisitDate
+    ? `${daysUntil(nextVisitDate)} days until your next visit`
+    : "Set your next visit date";
+
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Text>Today</Text>
+    <View style={{ flex: 1, justifyContent: "center", alignItems: "center", gap: 10 }}>
+      <Text>{countdownText}</Text>
+
+      <Button title="Set countdown" onPress={() => router.push("/(app)/countdown")} />
+
       <Button title="New check-in" onPress={() => router.push("/(app)/new-checkin")} />
       <Button title="Timeline" onPress={() => router.push("/(app)/timeline")} />
       <Button title="Daily prompt" onPress={() => router.push("/(app)/prompt")} />
