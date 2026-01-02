@@ -14,8 +14,18 @@ function daysUntil(dateYMD: string) {
   return Math.ceil(diffMs / (1000 * 60 * 60 * 24));
 }
 
+function daysSince(dateYMD: string) {
+  const [y, m, d] = dateYMD.split("-").map(Number);
+  const target = new Date(y, m - 1, d);
+  const today = new Date();
+  const start = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+  const diffMs = today.getTime() - start.getTime();
+  return Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+}
+
 export default function Home() {
   const [nextVisitDate, setNextVisitDate] = useState<string>("");
+  const [milestones, setMilestones] = useState<any>(null);
 
   useEffect(() => {
     (async () => {
@@ -23,9 +33,9 @@ export default function Home() {
       if (!coupleId) return;
 
       const snap = await getDoc(doc(db, "couples", coupleId));
-      const date = (snap.data() as any)?.nextVisitDate as string | undefined;
-
-      if (date) setNextVisitDate(date);
+      setMilestones((snap.data() as any)?.milestones ?? null);
+      // const date = (snap.data() as any)?.nextVisitDate as string | undefined;
+      // if (date) setNextVisitDate(date);
     })();
   }, []);
 
@@ -36,12 +46,20 @@ export default function Home() {
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center", gap: 10 }}>
       <Text>{countdownText}</Text>
+      {milestones?.firstDate && (
+        <Text>{daysSince(milestones.firstDate)} days since your first date</Text>
+      )}
+
+      {milestones?.anniversary && (
+        <Text>{daysSince(milestones.anniversary)} days since your anniversary</Text>
+      )}
 
       <Button title="Set countdown" onPress={() => router.push("/(app)/countdown")} />
 
       <Button title="New check-in" onPress={() => router.push("/(app)/new-checkin")} />
       <Button title="Timeline" onPress={() => router.push("/(app)/timeline")} />
       <Button title="Daily prompt" onPress={() => router.push("/(app)/prompt")} />
+      <Button title="Edit milestones" onPress={() => router.push("/(app)/milestones")} />
     </View>
   );
 }
