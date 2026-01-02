@@ -7,6 +7,7 @@ export default function Home() {
       <Text>Today</Text>
       <Button title="New check-in" onPress={() => router.push("/(app)/new-checkin")} />
       <Button title="Timeline" onPress={() => router.push("/(app)/timeline")} />
+      <Button title="Daily prompt" onPress={() => router.push("/(app)/prompt")} />
     </View>
   );
 }
