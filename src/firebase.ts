@@ -1,13 +1,13 @@
-// Import the functions you need from the SDKs you need
+// Import the functions needed from the SDKs needed
 import { initializeApp, getApps, getApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
+import { getAuth, connectAuthEmulator } from "firebase/auth";
+import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
-// TODO: Add SDKs for Firebase products that you want to use
+// TODO: Add SDKs for Firebase products 
 // https://firebase.google.com/docs/web/setup#available-libraries
 
-// Your web app's Firebase configuration
+// Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
     apiKey: "AIzaSyBvF8woXDn_ZOAN-0-ZyGtm-VxYDaOmrFU",
@@ -26,3 +26,11 @@ const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const db = getFirestore(app);
 export const storage = getStorage(app);
+
+if (__DEV__) {
+  try {
+    connectAuthEmulator(auth, "http://127.0.0.1:9099");
+  } catch (error) {
+    console.error("Failed to connect to auth emulator:", error);
+  }
+}
