@@ -5,13 +5,10 @@ service cloud.firestore {
   	// OTP requests (email login)
     match /otp_requests/{email} {
         // Allow create/update for unauthenticated users (login step)
-        allow create, update: if true;
+        allow create, update, delete: if true;
 
         // Allow read only during verification
         allow read: if true;
-
-        // Prevent deletes from client (cleanup handled by app logic)
-        allow delete: if false;
       }
 
     match /couples/{coupleId} {
