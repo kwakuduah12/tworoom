@@ -29,7 +29,7 @@ export const storage = getStorage(app);
 
 if (__DEV__) {
   try {
-    connectAuthEmulator(auth, "http://127.0.0.1:9099");
+    // connectAuthEmulator(auth, "http://127.0.0.1:9099");
   } catch (error) {
     console.error("Failed to connect to auth emulator:", error);
   }
