@@ -3,11 +3,17 @@ import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
 import { db } from "../firebase";
 import { Memory } from "../types/memory";
 
-export function useMemories(coupleId: string) {
+export function useMemories(coupleId?: string) {
   const [memories, setMemories] = useState<Memory[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (!coupleId){
+        setMemories([]);
+        setLoading(false);
+        return;
+    }
+
     const q = query(
       collection(db, "couples", coupleId, "memories"),
       orderBy("createdAt", "desc")
