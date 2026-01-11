@@ -39,6 +39,27 @@ service cloud.firestore {
       allow delete: if request.auth != null
         && request.auth.uid in resource.data.members;
       
+      match /memories/{memoryId} {
+        allow read: if request.auth != null
+          && request.auth.uid in get(
+            /databases/$(database)/documents/couples/$(coupleId)
+          ).data.members;
+
+        allow create: if request.auth != null
+          && request.auth.uid in get(
+            /databases/$(database)/documents/couples/$(coupleId)
+          ).data.members
+          && request.resource.data.keys().hasAll([
+            "text",
+            "authorId",
+            "createdAt"
+          ])
+          && request.resource.data.authorId == request.auth.uid
+          && request.resource.data.text is string
+          && request.resource.data.text.size() <= 5000;
+
+        allow update, delete: if false;
+      }
       // MESSAGES (example subcollection)
       match /messages/{messageId} {
 
