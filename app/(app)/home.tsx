@@ -46,6 +46,9 @@ export default function Home() {
 
   if (!couple) return null;
 
+  console.log("HOME couple:", couple);
+  console.log("HOME coupleId:", couple?.id);
+
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center", gap: 10 }}>
       {couple.nextVisitDate && (
