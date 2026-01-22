@@ -1,8 +1,4 @@
-
 {
   "name": "Aura: Our Private World",
-  "description": "A refined, intimate space for long-distance couples to share moments, track milestones, and grow a private digital world together.",
-  "requestFramePermissions": [
-    "camera"
-  ]
+  "description": "A refined, intimate space for long-distance couples to share moments, track milestones, and grow a private digital world together."
 }

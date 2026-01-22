@@ -1,4 +1,3 @@
-
 import { CoupleData, TimelineEntry, UserProfile, Memory } from '../types';
 
 const KEYS = {

@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { UserProfile, CoupleData } from '../types';
 
